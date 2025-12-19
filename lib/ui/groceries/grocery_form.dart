@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:w12quiz/data/mock_grocery_repository.dart';
 
 import '../../models/grocery.dart';
 
@@ -47,6 +48,14 @@ class _NewItemState extends State<NewItem> {
 
   void onAdd() {
     // Will be implemented later - Create and return the new grocery
+    String name = _nameController.text;
+    final int quantity = int.tryParse(_quantityController.text) ?? 1;
+    String id = (dummyGroceryItems.length + 1).toString();
+
+    Grocery newGrocery = Grocery( id:id ,name: name, quantity: quantity, category: _selectedCategory);
+
+    Navigator.of(context).pop(newGrocery);
+    
   }
 
   @override
@@ -76,7 +85,17 @@ class _NewItemState extends State<NewItem> {
                 Expanded(
                   child: DropdownButtonFormField<GroceryCategory>(
                     initialValue: _selectedCategory,
-                    items: [  ],
+                    items: GroceryCategory.values.map((category){
+                      return DropdownMenuItem<GroceryCategory>(
+                        value: category,
+                        child: Row(
+                          children: [
+                            Container(width: 15,height: 15,color: category.color),
+                            SizedBox(width: 5),
+                            Text(category.label)
+                            ],
+                        ));
+                    }).toList(),
                     onChanged: (value) {
                       if (value != null) {
                         setState(() {
